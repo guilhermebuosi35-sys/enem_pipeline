@@ -3,3 +3,9 @@
 
 # variaveis das Keys do Ambiente
 .env
+
+# Dados do Projeto
+data/
+
+# Certificados
+rnp_cert.pem
