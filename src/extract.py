@@ -41,6 +41,6 @@ for arquivo in links:
 
         print(f"\nDeletendo arquivo {nome} para desocupar armazenamento...")
 
-        caminho_zip.unlink()
+        caminho_zip.unlink(missing_ok=True)
 
         print("\nArquivos extraídos com sucesso!")

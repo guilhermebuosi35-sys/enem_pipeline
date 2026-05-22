@@ -7,5 +7,5 @@
 # Dados do Projeto
 data/
 
-# Certificados
-rnp_cert.pem
+# Misc
+.DS_Store
