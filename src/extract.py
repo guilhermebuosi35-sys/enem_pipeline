@@ -4,11 +4,13 @@ import certifi
 import zipfile
 
 links = ["https://download.inep.gov.br/microdados/microdados_enem_2024.zip", "https://download.inep.gov.br/microdados/microdados_enem_2023.zip","https://download.inep.gov.br/microdados/microdados_enem_2022.zip"]
- 
+cert_path = "/home/guilherme-buosi/enem_pipeline/rnp_cert.pem"
+raw_folder_path = Path("/home/guilherme-buosi/enem_pipeline/data/raw")
+
 for arquivo in links: 
-    resposta = requests.get(arquivo, stream=True, verify="/Users/macbook/enem_pipeline/rnp_cert.pem")
+    resposta = requests.get(arquivo, stream=True, verify=cert_path)
     nome = Path(arquivo).name
-    pasta = Path("/Users/macbook/enem_pipeline/data/raw")
+    pasta = raw_folder_path
     caminho_zip = pasta / nome
 
     pasta.mkdir(parents=True, exist_ok=True) 
@@ -39,8 +41,8 @@ for arquivo in links:
                     with open(pasta_download / Path(membro).name, "wb") as destino:
                         destino.write(origem.read())
 
-        print(f"\nDeletendo arquivo {nome} para desocupar armazenamento...")
+    print(f"\nDeletendo arquivo {nome} para desocupar armazenamento...")
 
-        caminho_zip.unlink(missing_ok=True)
+    caminho_zip.unlink()
 
-        print("\nArquivos extraídos com sucesso!")
+    print("\nArquivos extraídos com sucesso!")
