@@ -4,16 +4,15 @@ import certifi
 import zipfile
 
 links = ["https://download.inep.gov.br/microdados/microdados_enem_2024.zip", "https://download.inep.gov.br/microdados/microdados_enem_2023.zip","https://download.inep.gov.br/microdados/microdados_enem_2022.zip"]
-cert_path = "/home/guilherme-buosi/enem_pipeline/rnp_cert.pem"
-raw_folder_path = Path("/home/guilherme-buosi/enem_pipeline/data/raw")
+cert_path = Path.cwd().parent/ "rnp_cert.pem"
+raw_folder_path = Path.cwd().parent / "data" / "raw"
 
 for arquivo in links: 
     resposta = requests.get(arquivo, stream=True, verify=cert_path)
-    nome = Path(arquivo).name
-    pasta = raw_folder_path
-    caminho_zip = pasta / nome
+    nome = Path(arquivo).name 
+    caminho_zip = raw_folder_path / nome
 
-    pasta.mkdir(parents=True, exist_ok=True) 
+    raw_folder_path.mkdir(parents=True, exist_ok=True) 
 
     print (f"Iniciando download do arquivo: '{nome}'...")
 
@@ -23,13 +22,13 @@ for arquivo in links:
 
     print (f"\nDownload finalizado com sucesso!")
 
-    print (f"\nRealizando o descomprimento do arquivo: '{nome}' na pasta '{pasta}'")
+    print (f"\nRealizando o descomprimento do arquivo: '{nome}' na pasta '{raw_folder_path}'")
 
     with zipfile.ZipFile(caminho_zip, 'r') as descomprimido:
 
         inicio = nome.find(".") - 4
         fim = nome.find(".")
-        pasta_download = Path(pasta / nome[inicio:fim])
+        pasta_download = Path(raw_folder_path / nome[inicio:fim])
 
         pasta_download.mkdir(parents=True, exist_ok=True) 
 

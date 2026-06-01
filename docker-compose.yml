@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: guilherme_buosi
+      POSTGRES_PASSWORD: Lionel10@
+      POSTGRES_DB: enem_pipeline_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
