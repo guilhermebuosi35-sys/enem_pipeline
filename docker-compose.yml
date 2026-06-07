@@ -1,11 +1,12 @@
 services:
   db:
-    image: postgres:15
+    image: postgres:16
+    container_name: postgres_db
     restart: always
     environment:
-      POSTGRES_USER: guilherme_buosi
-      POSTGRES_PASSWORD: Lionel10@
-      POSTGRES_DB: enem_pipeline_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
