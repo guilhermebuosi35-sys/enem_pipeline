@@ -1,0 +1,1 @@
+# Deve localizar as traduções dos itens dos dicionàrios para facilitar nas analises e demais considerações

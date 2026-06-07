@@ -35,7 +35,7 @@ for arquivo in links:
         pasta_alvo = 'DADOS/'
 
         for membro in descomprimido.namelist():
-            if membro.startswith(pasta_alvo) and not membro.endswith('/'):
+            if membro.startswith(pasta_alvo) and not membro.endswith('/') and not 'ITENS_PROVA' in membro and not 'QUEST_HAB_ESTUDO' in membro:
                 with descomprimido.open(membro) as origem:
                     with open(pasta_download / Path(membro).name, "wb") as destino:
                         destino.write(origem.read())
