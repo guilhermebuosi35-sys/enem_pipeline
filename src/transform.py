@@ -80,6 +80,7 @@ columns_range = {
 for col, limites in columns_range.items():
     assert df_resultados_2024[col].dropna().between(limites[0], limites[1]).all(), f"Erro: {col} deve constar entre {limites[0]} e {limites[1]}"
 
+
 # %% [markdown]
 # ### Criando um arquivo CSV com base no DataFrame dentro da pasta de dados processados
 
