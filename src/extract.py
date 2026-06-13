@@ -3,13 +3,16 @@ from pathlib import Path
 import certifi
 import zipfile
 
+# Links dos datasets trabalhados
 links = ["https://download.inep.gov.br/microdados/microdados_enem_2024.zip", "https://download.inep.gov.br/microdados/microdados_enem_2023.zip","https://download.inep.gov.br/microdados/microdados_enem_2022.zip"]
-cert_path = Path.cwd().parent/ "rnp_cert.pem"
-raw_folder_path = Path.cwd().parent / "data" / "raw"
+cert_path = Path(__file__).resolve().parent.parent / "rnp_cert.pem"
+raw_folder_path = Path(__file__).resolve().parent.parent / "data"
 
-for arquivo in links: 
-    resposta = requests.get(arquivo, stream=True, verify=cert_path)
-    nome = Path(arquivo).name 
+
+def extrair_arquivos (link_arquivo):
+
+    resposta = requests.get(link_arquivo, stream=True, verify=cert_path)
+    nome = Path(link_arquivo).name 
     caminho_zip = raw_folder_path / nome
 
     raw_folder_path.mkdir(parents=True, exist_ok=True) 
@@ -45,3 +48,8 @@ for arquivo in links:
     caminho_zip.unlink()
 
     print("\nArquivos extraídos com sucesso!")
+
+if __name__ == '__main__':
+    
+    for url in links:
+        extrair_arquivos(url) 
