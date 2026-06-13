@@ -9,6 +9,7 @@ data/
 
 # Misc
 .DS_Store
+__pycache__
 
 # Certificados
 rnp_cert.pem

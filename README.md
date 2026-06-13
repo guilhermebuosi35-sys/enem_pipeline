@@ -31,5 +31,5 @@ Aloque dentro da varíavel `cert_path` (no Path do extract.py) o caminho para o 
 2. Garanta que você possui o Docker instalado no seu ambiente com `docker -v`
 3. Rode `docker-compose up -d db` para subir o container referente ao banco de dados
 4. Após isso, rode `docker compose ps` para verificar o status
-5. Use o seguinte código para criar as tabelas: `docker exec -it postgres_db psql -U usuario -d banco < sql/create_tables.sql` (Lembre-se de substituir o "usuario" e "banco" pelos seus nomes alocados no .env)
+5. Use o seguinte código para criar os schemas e as tabelas: `docker exec -it postgres_db psql -U usuario -d banco < sql/create_schemas.sql < sql/create_tables.sql` (Lembre-se de substituir o "usuario" e "banco" pelos seus nomes alocados no .env)
 6. Rode `docker exec -it postgres_db psql -U usuario -d banco` para acessar o terminal do database, e então `\dt` para verificar se as tabelas foram criadas 
