@@ -23,12 +23,6 @@ url_object = URL.create(
 
 engine = create_engine(url_object)
 
-# Criação da tabel silver e transformação dos dados
-print("Executando query de criação das tabelas na camada silver...\n")
-
-caminho_arquivo = [Path(__file__).resolve().parent.parent / 'sql' / 'transformation_tables.sql']
-
-executar_query(engine_db=engine, path_file=caminho_arquivo)
 
 # Dicionário com as regras das colunas da tabela participantes
 intervalo_participantes = {
@@ -93,6 +87,14 @@ def checar_qualidade (engine_db, tabela):
 
 if __name__ == '__main__':
 
+    # Criação das tabelas silver e transformação dos dados
+    print("Executando query de criação das tabelas na camada silver...\n")
+
+    caminho_silver = [Path(__file__).resolve().parent.parent / 'sql' / 'transformation_tables.sql']
+
+    executar_query(engine_db=engine, path_file=caminho_silver)
+
+    # Checagem das qualidade dos dados da camada silver
     print("Checando qualidade dos datos e regras do negócio...\n")
 
     tabelas = ['vw_resultados_2022', 'vw_resultados_2023', 'vw_resultados_2024', 'vw_participantes_2022', 'vw_participantes_2023', 'vw_participantes_2024' ] 
