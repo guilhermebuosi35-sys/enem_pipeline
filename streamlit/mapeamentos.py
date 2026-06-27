@@ -61,6 +61,13 @@ faixa_etaria = {
     20:	'Maior de 70 anos'
 }
 
+# Tipo de escola frequentado no Ensino Médio? (Referente aos questionários de 2022 e 2023)
+escola_ens_medio = {
+    1: 'Não Respondeu',
+    2: 'Pública',
+    3: 'Privada'
+}
+
 # Você possui renda?
 questionario_q6 = {
     'A': 'Não',
@@ -89,8 +96,28 @@ questionario_q7 = {
     'Q': 'Acima de R$ 28.240,00'
 }
 
+histo_renda = {
+    'A': 'Nenhuma Renda',
+    'B': 'Até R$ 1.412,00',
+    'C': 'R$ 1.412,01 - R$ 2.118,00',
+    'D': 'R$ 2.118,01 - R$  2.824,00',
+    'E': 'R$ 2.824,01 - R$ 3.530,00',
+    'F': 'R$ 3.530,01 - R$ 4.236,00',
+    'G': 'R$ 4.236,01 - R$ 5.648,00',
+    'H': 'R$ 5.648,01 - R$ 7.060,00',
+    'I': 'R$ 7.060,01 - R$ 8.472,00',
+    'J': 'R$ 8.472,01 - R$ 9.884,00',
+    'K': 'R$ 9.884,01 - R$ 11.296,00',
+    'L': 'R$ 11.296,01 - R$ 12.708,00',
+    'M': 'R$ 12.708,01 - R$ 14.120,00',
+    'N': 'R$ 14.120,01 - R$ 16.944,00',
+    'O': 'R$ 16.944,01 - R$ 21.180,00',
+    'P': 'R$ 21.180,01 - R$ 28.240,00',
+    'Q': 'Acima de R$ 28.240,00'
+}
 
-# Em que tipo de escola você frequentou ou frequenta o Ensino Médio?
+
+# Em que tipo de escola você frequentou ou frequenta o Ensino Médio? (Exclusivo do questionário de 2024)
 questionario_q23 = {
     'A': 'Somente em escola pública',
     'B': 'Parte em escola pública e parte em escola privada sem bolsa de estudo integral',
