@@ -13,3 +13,6 @@ __pycache__
 
 # Certificados
 rnp_cert.pem
+
+# Backup
+/backup
