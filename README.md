@@ -37,3 +37,22 @@ openssl s_client -connect download.inep.gov.br:443 -showcerts 2>$null | openssl 
 3. Rode `docker-compose up -d db` para subir o container referente ao banco de dados
 4. Após isso, rode `docker compose ps` para verificar o status
 
+
+## Databricks
+
+### Set Up
+
+1. Realize a instalação da depêndencia da API do Databricks 
+
+`pip3 install databricks-sdk`
+
+2. Instale o Databricks CLI
+
+    a. Rode `databricks auth login --host <seu-workspace-url> --account-id <seu-account-id>`
+    b. Isso cria/atualiza o `~/.databrickscfg` local. Não precisa configurar nada dentro do projeto
+
+3. Com a credencial configurada, Importe a biblioteca
+
+`from databricks.sdk import WorkspaceClient`
+
+`w = WorkspaceClient()`
