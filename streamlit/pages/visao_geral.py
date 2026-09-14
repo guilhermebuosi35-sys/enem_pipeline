@@ -21,123 +21,156 @@ secrets = {
 # Inicializa conexão via cache do Streamlit
 conn = st.connection("postgresql", type="sql", **secrets)
 
-# SESSÃO 1: Distribuição de Renda
-st.markdown("## Distribuição de Renda Familiar")
+# Funções de suporte
 
-option_map = ["2022", "2023", "2024"]
-materias_dict = {
-    "nota_cn": "Ciências da Natureza",
-    "nota_ch": "Ciências Humanas",
-    "nota_lc": "Linguagens",
-    "nota_mt": "Matemática",
-    "nota_redacao": "Redação"
-}
+# -- Formatador de milhares --
 
-ano_renda = st.pills(
-    "Ano de referência (Renda)",
-    options=option_map,
+def formatar_milhares(valor):
+    return f"{valor:,}".replace(",", ".")
+
+# Configurações do layout da página
+st.set_page_config(layout="wide")
+
+ano_global = st.pills(
+    "Ano de referência",
+    options=["2022", "2023", "2024"],
     selection_mode="single",
     default="2022",
-    key="pill_renda"
+    key="ano_global"
 )
 
-if ano_renda:
-    dic_renda = {
-        '2022': 'q006',
-        '2023': 'q006',
-        '2024': 'q007'
-    }
+card1, card2, card3, card4 = st.columns(4)
 
-    quest_renda = dic_renda[ano_renda]
 
-    with st.spinner("Agregando dados de renda..."):
-        df_dist_rend = conn.query(
-            f'''
+if ano_global:
+    # SESSÃO 1: Cards com Principais métricas
+    with card1:
+        df_dist_masculino = conn.query(f'''
             SELECT 
-                {quest_renda} AS codigo_renda,
-                COUNT(*) AS total_candidatos
-            FROM silver.vw_participantes_{ano_renda}
-            WHERE {quest_renda} IS NOT NULL
-            GROUP BY {quest_renda}
-            ORDER BY {quest_renda};
-            '''
-        )
+                sexo,
+                COUNT(*) AS contagem
+            FROM silver.vw_participantes_{ano_global}
+            WHERE sexo = 'M'
+            GROUP BY sexo
+        ''')  
 
-        df_dist_rend['faixa_renda'] = df_dist_rend['codigo_renda'].map(histo_renda)
+        dist_masculino_int = int(df_dist_masculino['contagem'].iloc[0])
 
-        fig_dis_renda = px.bar(
-            df_dist_rend, 
-            x="faixa_renda", 
-            y="total_candidatos",
-            labels={"faixa_renda": "Renda Familiar", "total_candidatos": "Número de Candidatos"}
-        )
-
-    st.plotly_chart(fig_dis_renda, use_container_width=True)
-
-st.divider()
-
-# SESSÃO 2: Distribuição de Notas
-st.markdown("## Distribuição de Notas Através dos Anos")
-
-ano_media_nota = st.pills(
-    "Ano de referência (Notas)",
-    options=option_map,
-    selection_mode="single",
-    default="2022",
-    key="selection_media"
-)
-
-if ano_media_nota:
+        st.metric(label="Masculino", value=formatar_milhares(dist_masculino_int), border=True)
     
-    with st.spinner("Carregando amostra e processando quartis..."):
-        df_media_nota = conn.query(f'''
-            SELECT
-                ano_exame,
-                nota_cn, 
-                nota_ch,
-                nota_lc,
-                nota_mt, 
-                nota_redacao  
-            FROM silver.vw_resultados_{ano_media_nota}
-            LIMIT 75000
-            '''
-        )
+    with card2:
+        df_dist_feminino = conn.query(f'''
+            SELECT 
+                sexo,
+                COUNT(*) AS contagem
+            FROM silver.vw_participantes_{ano_global}
+            WHERE sexo = 'F'
+            GROUP BY sexo 
+        ''')
 
-        df_media_nota_rn = df_media_nota.rename(columns=materias_dict)
+        dist_feminino_int = int(df_dist_feminino['contagem'].iloc[0])
 
-        fig_media_nota = px.box(
-            df_media_nota_rn, 
-            y=["Ciências da Natureza", "Ciências Humanas", "Linguagens", "Matemática", "Redação"],
-            labels={
-                "variable": "Área de Conhecimento",
-                "value": "Pontuação"
-            }
-        )
-        
-        fig_media_nota.update_layout(showlegend=False)
+        st.metric(label="Feminino", border=True, value=formatar_milhares(dist_feminino_int))
 
-    st.plotly_chart(fig_media_nota, use_container_width=True)
+    with card3:
+        st.metric(label="A decidir", border=True, value="...")
 
-# SESSÃO 2: Distribuição de Notas por Região
-st.markdown("## Distribuição de Notas por Região")
+    with card4:
+        st.metric(label="A decidir", border=True, value="...")
 
-ano_media_regiao = st.pills(
-    "Ano de referência (Região)",
-    options=option_map,
-    selection_mode="single",
-    default="2022",
-    key="selection_regiao"
-)
+    st.divider()
 
-materia_selecionada = st.pills(
-    "Matéria da Prova",
-    options=materias_dict.values(),
-    selection_mode='single',
-    default='Ciências da Natureza',
-    key='selection_materia'
-)
+    # SESSÃO 2: Distribuição de Renda
+    col1, col2 = st.columns(2)
 
-if ano_media_regiao:
+    with col1:
+        st.markdown("## Distribuição de Renda Familiar")
+
+        materias_dict = {
+            "nota_cn": "Ciências da Natureza",
+            "nota_ch": "Ciências Humanas",
+            "nota_lc": "Linguagens",
+            "nota_mt": "Matemática",
+            "nota_redacao": "Redação"
+        }
+
+        dic_renda = {
+            '2022': 'q006',
+            '2023': 'q006',
+            '2024': 'q007'
+        }
+
+        quest_renda = dic_renda[ano_global]
+
+        with st.spinner("Agregando dados de renda..."):
+            df_dist_rend = conn.query(
+                f'''
+                SELECT 
+                    {quest_renda} AS codigo_renda,
+                    COUNT(*) AS total_candidatos
+                FROM silver.vw_participantes_{ano_global}
+                WHERE {quest_renda} IS NOT NULL
+                GROUP BY {quest_renda}
+                ORDER BY {quest_renda};
+                '''
+            )
+
+            df_dist_rend['faixa_renda'] = df_dist_rend['codigo_renda'].map(histo_renda)
+
+            fig_dis_renda = px.bar(
+                df_dist_rend, 
+                x="faixa_renda", 
+                y="total_candidatos",
+                labels={"faixa_renda": "Renda Familiar", "total_candidatos": "Número de Candidatos"}
+            )
+
+        st.plotly_chart(fig_dis_renda, use_container_width=True)
+
+    st.divider()
+
+    # SESSÃO 3: Distribuição de Notas
+    with col2:
+        st.markdown("## Distribuição de Notas Através dos Anos")
+            
+        with st.spinner("Carregando amostra e processando quartis..."):
+            df_media_nota = conn.query(f'''
+                SELECT
+                    ano_exame,
+                    nota_cn, 
+                    nota_ch,
+                    nota_lc,
+                    nota_mt, 
+                    nota_redacao  
+                FROM silver.vw_resultados_{ano_global}
+                LIMIT 75000
+                '''
+            )
+
+            df_media_nota_rn = df_media_nota.rename(columns=materias_dict)
+
+            fig_media_nota = px.box(
+                df_media_nota_rn, 
+                y=["Ciências da Natureza", "Ciências Humanas", "Linguagens", "Matemática", "Redação"],
+                labels={
+                    "variable": "Área de Conhecimento",
+                    "value": "Pontuação"
+                }
+            )
+            
+            fig_media_nota.update_layout(showlegend=False)
+
+        st.plotly_chart(fig_media_nota, use_container_width=True)
+
+    # SESSÃO 4: Distribuição de Notas por Região
+    st.markdown("## Distribuição de Notas por Região")
+
+    materia_selecionada = st.pills(
+        "Matéria da Prova",
+        options=materias_dict.values(),
+        selection_mode='single',
+        default='Ciências da Natureza',
+        key='selection_materia'
+    )
 
     with urlopen("https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson") as response:
         brasil_geojson = json.load(response)
@@ -148,7 +181,7 @@ if ano_media_regiao:
         SELECT 
             uf_prova,
             ROUND(AVG({mat_query[0]}), 2) AS media 
-        FROM silver.vw_resultados_{ano_media_regiao}                 
+        FROM silver.vw_resultados_{ano_global}                 
         GROUP BY uf_prova 
         ORDER BY media DESC
     ''')
