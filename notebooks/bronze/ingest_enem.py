@@ -26,6 +26,7 @@ for path, table in table_names:
             format => 'csv', 
             header => true, 
             sep => ';',
+            encoding => 'ISO-8859-1',
             multiLine => true, 
             inferColumnTypes => false)
     """)
