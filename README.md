@@ -56,3 +56,21 @@ openssl s_client -connect download.inep.gov.br:443 -showcerts 2>$null | openssl 
 `from databricks.sdk import WorkspaceClient`
 
 `w = WorkspaceClient()`
+
+### Streamlit <> Databricks
+
+Para executar a conexão entre o streamlit e o seu workspace, você precisa iniciar configurando o arquivo .streamlit/secrets.toml com as seguintes variáveis de conexão:
+
+```
+# .streamlit/secrets.toml
+
+[databricks]
+server_hostname = "SEU_DATABRICKS_SERVER_HOSTNAME"
+http_path = "SEU_DATABRICKS_HTTP_PATH"
+access_token = "SEU_DATABRICKS_PERSONAL_ACCESS_TOKEN"
+```
+
+**Como encontra-los no databricks** 
+
+1. server_hostname e http_path: menu lateral → SQL Warehouses → clica no seu warehouse → aba Connection details. O hostname vai sem o https:// na frente.
+2. access_token: clica no seu avatar (canto superior direito) → Settings → Developer → Access tokens → Generate new token. Dá um nome (tipo “streamlit-enem”) e uma validade. O token aparece uma vez só: copia direto para o secrets.toml.
