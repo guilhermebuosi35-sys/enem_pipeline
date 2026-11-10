@@ -18,4 +18,4 @@ rnp_cert.pem
 /backup
 
 # Configurações de conexão databricks <> streamlit
-.streamlit/secrets.toml
+.streamlit
