@@ -11,6 +11,16 @@ def get_databricks_connection():
         access_token=st.secrets["databricks"]["access_token"]
     )
 
+# Função para buscar dados do Databricks com cache de 10 minutos
+@st.cache_data(ttl=600)
+def fetch_data(query):
+    connection = get_databricks_connection()
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        result = cursor.fetchall_arrow().to_pandas()
+    return result
+
+
 st.title("Pipeline ENEM")
 
 query_string = "SELECT * FROM enem_pipeline.silver.resultados LIMIT 10"
@@ -21,3 +31,6 @@ try:
     
     st.success("Successfully pulled data!")
     st.dataframe(df)
+
+except Exception as e:
+    st.error(f"An error occurred: {e}")
